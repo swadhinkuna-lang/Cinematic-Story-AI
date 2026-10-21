@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinematic Story AI</title>
+<style>
+body{font-family:Arial,sans-serif;background:#101522;color:#fff;
+padding:18px;margin:0}
+main{max-width:700px;margin:auto}
+h1{color:#ffc857}
+p{color:#cbd5e1;line-height:1.5}
+label{display:block;margin-top:16px}
+input,select,textarea,button{
+width:100%;box-sizing:border-box;padding:12px;margin-top:7px;
+border-radius:9px;border:1px solid #475569;font-size:16px}
+input,select,textarea{background:#1e293b;color:white}
+button{background:#ffc857;color:#111827;font-weight:bold;
+border:0;margin-top:20px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;
+background:#1e293b;padding:14px;border-radius:10px;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+<h1>🎬 Cinematic Story AI</h1>
+<p>कहानी का आइडिया डालें और कहानी, इमेज तथा वीडियो प्रॉम्प्ट तैयार करें।</p>
+
+<label>कहानी का आइडिया</label>
+<textarea id="idea" rows="3" placeholder="जैसे: एक अमर योद्धा अपने गाँव को राक्षस से बचाता है"></textarea>
+
+<label>कहानी का प्रकार</label>
+<select id="genre">
+<option>Mythology</option>
+<option>Horror</option>
+<option>Thriller</option>
+<option>Fantasy</option>
+<option>Emotional Drama</option>
+<option>Kids Animation</option>
+</select>
+
+<label>कहानी की भाषा</label>
+<select id="lang">
+<option>Hindi</option>
+<option>Hinglish</option>
+<option>English</option>
+</select>
+
+<label>वीडियो का अंदाज़</label>
+<select id="style">
+<option>Realistic Cinematic Film</option>
+<option>Epic Mythological Cinema</option>
+<option>Dark Horror Cinema</option>
+<option>3D Animation</option>
+</select>
+
+<label>वीडियो की अवधि</label>
+<select id="duration">
+<option>30 seconds</option>
+<option>60 seconds</option>
+<option>3 minutes</option>
+<option>5 minutes</option>
+</select>
+
+<button onclick="generate()">Generate Story & Prompts</button>
+<div id="result"></div>
+</main>
+
+<script>
+function generate(){
+const idea=document.getElementById('idea').value.trim();
+const genre=document.getElementById('genre').value;
+const lang=document.getElementById('lang').value;
+const style=document.getElementById('style').value;
+const duration=document.getElementById('duration').value;
+
+if(!idea){
+alert('पहले कहानी का आइडिया लिखें।');
+return;
+}
+
+const story=`TITLE: ${genre} Story
+
+IDEA: ${idea}
+
+DURATION: ${duration}
+LANGUAGE: ${lang}
+
+STORY STRUCTURE:
+1. HOOK: शुरुआत में एक रहस्यमय या चौंकाने वाली घटना।
+2. SETUP: मुख्य किरदार और उसकी दुनिया का परिचय।
+3. CONFLICT: एक बड़ा खतरा या मुश्किल सामने आए।
+4. CLIMAX: मुख्य किरदार का सबसे कठिन मुकाबला।
+5. ENDING: भावनात्मक, यादगार या चौंकाने वाला अंत।
+
+इस आइडिया पर पूरी ${lang} कहानी लिखें।
+हर दृश्य के लिए संवाद और नैरेशन अलग रखें।`;
+
+const image=`IMAGE PROMPT:
+${idea}
+Genre: ${genre}
+Visual style: ${style}
+Cinematic composition, detailed environment,
+dramatic lighting, realistic textures,
+professional film color grading,
+consistent character appearance,
+16:9 widescreen, no watermark.`;
+
+const video=`TEXT-TO-VIDEO PROMPT:
+Scene based on: ${idea}
+Style: ${style}
+Include natural character movement,
+clear physical actions, camera movement,
+foreground and background depth,
+cinematic lighting and atmospheric sound.
+Maintain character and costume consistency.
+Duration target: ${duration}.
+Avoid flickering, distorted faces and extra limbs.`;
+
+const character=`CHARACTER CONSISTENCY:
+Create a character reference sheet first.
+Specify age, face shape, hairstyle, clothing,
+body type, accessories and distinctive features.
+Repeat the same description in every scene.
+Do not change the character's face or costume
+unless the story explicitly requires it.`;
+
+document.getElementById('result').innerHTML=
+'<h2>Story Blueprint</h2><pre id="story"></pre>'+
+'<button onclick="copyText(\'story\')">Copy Story Blueprint</button>'+
+'<h2>Image Prompt</h2><pre id="image"></pre>'+
+'<button onclick="copyText(\'image\')">Copy Image Prompt</button>'+
+'<h2>Video Prompt</h2><pre id="video"></pre>'+
+'<button onclick="copyText(\'video\')">Copy Video Prompt</button>'+
+'<h2>Character Consistency</h2><pre id="character"></pre>'+
+'<button onclick="copyText(\'character\')">Copy Character Prompt</button>';
+
+document.getElementById('story').textContent=story;
+document.getElementById('image').textContent=image;
+document.getElementById('video').textContent=video;
+document.getElementById('character').textContent=character;
+}
+
+function copyText(id){
+const text=document.getElementById(id).textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(text)
+.then(()=>alert('Copied!'))
+.catch(()=>fallbackCopy(text));
+}else{fallbackCopy(text);}
+}
+function fallbackCopy(text){
+const area=document.createElement('textarea');
+area.value=text;
+document.body.appendChild(area);
+area.select();
+document.execCommand('copy');
+area.remove();
+alert('Copied!');
+}
+</script>
+</body>
+</html>
